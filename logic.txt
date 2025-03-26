@@ -1,0 +1,15 @@
+For Webserver i need to work with cliend and server.
+
+For server:
+    Create a socket
+    Bind the socker
+    Listen on the socker
+    Accept a conenction
+    Send and receive data
+    Disconnect
+
+For client:
+    Create a socker
+    Connect to server
+    Send and receive data
+    Disconnect
