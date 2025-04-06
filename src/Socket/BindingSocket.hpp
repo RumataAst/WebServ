@@ -3,7 +3,7 @@
 
 #include "SimpleSocket.hpp"
 
-namespace hde {
+namespace net {
     class BindingSocket : public SimpleSocket {
     public:
         BindingSocket(int domain, int type, int protocol, int port, u_long interface);

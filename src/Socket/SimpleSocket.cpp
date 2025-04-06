@@ -1,6 +1,6 @@
 #include "SimpleSocket.hpp"
 
-namespace hde {
+namespace net {
     SimpleSocket::SimpleSocket(int domain, int type, int protocol, int port, u_long interface) {
         memset(&address, 0, sizeof(address));
         address.sin_family = domain;
@@ -8,11 +8,7 @@ namespace hde {
         address.sin_addr.s_addr = htonl(interface);
     
         sock_fd = socket(domain, type, protocol);
-        test_connection(sock_fd);                                           // Test socket creation
-    
-        // Let derived classes implement bind()/connect()
-        connection_status = establish_socket_operation(sock_fd, address);
-        test_connection(connection_status);                                 // Test bind/connect
+        test_connection(sock_fd);
     }
 
     void SimpleSocket::test_connection(int result) const {
@@ -33,4 +29,11 @@ namespace hde {
     const sockaddr_in& SimpleSocket::get_address() const {
         return address;
     }
+
+    // Let derived classes implement bind()/connect()/ (listen() && accept())
+    void    SimpleSocket::setup(void) {
+        connection_status = establish_socket_operation(sock_fd, address);
+        test_connection(connection_status);  
+    }    
+
 }

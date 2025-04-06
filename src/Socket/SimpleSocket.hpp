@@ -7,7 +7,7 @@
 #include <sys/socket.h> // socket, bind, connect
 #include <netinet/in.h> // sockaddr_in
 
-namespace hde {
+namespace net {
     class SimpleSocket {
     private:
         int                 sock_fd;            // Socket file descriptor
@@ -28,7 +28,7 @@ namespace hde {
         
         virtual ~SimpleSocket() = default; // Virtual destructor for polymorphism
 
-        // Prevent copying (sockets are not copyable)
+        // Prevent copying
         SimpleSocket(const SimpleSocket&) = delete;
         SimpleSocket& operator=(const SimpleSocket&) = delete;
 
@@ -45,12 +45,15 @@ namespace hde {
         const sockaddr_in& get_address() const;
 
         /**
-         * @brief Pure virtual function for Okay et-specific operations (bind/connect)
+         * @brief Pure virtual function for specific operations (bind/connect), inhereted by other sockets
          * @param sock_fd Socket file descriptor
          * @param address Socket address structure
          * @return int Result of the operation (must be non-negative on success)
          */
-        virtual int establish_socket_operation(int &sock_fd, sockaddr_in &address) = 0;
+        virtual int establish_socket_operation(int &sock_fd, const sockaddr_in &address) = 0;
+
+        // Creating new function in order to avoid calling pure virtual function in constructor
+        void    setup(void);    
     };
 }
 

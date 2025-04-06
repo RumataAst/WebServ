@@ -2,8 +2,9 @@
 #define CONNECTING_SOCKET_HPP
 
 #include "SimpleSocket.hpp"
+#include <arpa/inet.h>
 
-namespace hde {
+namespace net {
     class ConnectingSocket : public SimpleSocket {
     public:
         ConnectingSocket(int domain, int type, int protocol, int port, u_long interface);
