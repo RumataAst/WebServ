@@ -22,18 +22,13 @@ namespace net {
         return sock_fd;
     }
 
-    int SimpleSocket::get_connection_status() const {
-        return connection_status;
-    }
-
     const sockaddr_in& SimpleSocket::get_address() const {
         return address;
     }
 
     // Let derived classes implement bind()/connect()/ (listen() && accept())
     void    SimpleSocket::setup(void) {
-        connection_status = establish_socket_operation(sock_fd, address);
-        test_connection(connection_status);  
+        test_connection(establish_socket_operation(sock_fd, address));  
     }    
 
 }

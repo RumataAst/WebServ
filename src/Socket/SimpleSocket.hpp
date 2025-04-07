@@ -11,7 +11,6 @@ namespace net {
     class SimpleSocket {
     private:
         int                 sock_fd;            // Socket file descriptor
-        int                 connection_status;  // Connection status (bind/connect result)
         struct sockaddr_in  address;            // Socket address structure
 
     public:

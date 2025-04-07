@@ -1,8 +1,8 @@
 NAME	=  Webserver
-SRCS    := main.cpp PmergeMe.cpp
+SRCS    := main.cpp
 BIN		:= bin
 OBJS    := $(addprefix $(BIN)/, $(SRCS:.cpp=.o))
-INC		:= include
+INC		:= Socket
 
 # Compiler and flags
 CXX			= c++

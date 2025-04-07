@@ -7,8 +7,7 @@ namespace net {
 }
 
     void ListeningSocket::start_listening() {
-        std::cout << "[SERVER] Listening on fd " << get_socket() 
-                << ", backlog=" << backlog << std::endl;
+        std::cout << "[SERVER] Listening on fd " << get_socket() << std::endl;
         test_connection(listen(get_socket(), backlog));
     }
 
