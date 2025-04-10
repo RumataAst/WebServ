@@ -4,7 +4,7 @@ For server:
     Create a socket
     Bind the socker
     Listen on the socker
-    Accept a conenction
+    Accept a connnction
     Send and receive data
     Disconnect
 
@@ -13,3 +13,12 @@ For client:
     Connect to server
     Send and receive data
     Disconnect
+
+To compile:
+ g++ -std=c++17 test.cpp ./Socket/ListeningSocket.cpp ./Socket/BindingSocket.cpp ./Socket/SimpleSocket.cpp ./Socket/ConnectingSocket.cpp -o test -ISocket
+
+Current state:
+I simplified the test. Currently i create client and server in 1 file test.cpp on different threads and just see if they connect.
+Next step would be to create a Server class and maybe Client? (not sure yet). 
+For the server class i want to have an array of pointers to Socket classes and member function that creates it.
+I am still not sure if it makes sense to change Listening class to Listening and Accepting? 
