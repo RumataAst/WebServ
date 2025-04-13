@@ -15,6 +15,14 @@ For client:
     Disconnect
 
 
+To compile:
+ g++ -std=c++17 test.cpp ./Socket/ListeningSocket.cpp ./Socket/BindingSocket.cpp ./Socket/SimpleSocket.cpp ./Socket/ConnectingSocket.cpp -o test -ISocket
+
+Current state:
+I simplified the test. Currently i create client and server in 1 file test.cpp on different threads and just see if they connect.
+The question is what is the better structure of the socket. Should Listening and Accepting be handled with the same class or if there is a reason to have Listening as separate.
+What are non-blocking file descriptors. What are poll(), select(), kqueue() or epoll()?
+
 Reading Beej's Guide to Network Programming.
 There are several types of Internet sockets. In the guide 2 are mentioned: Stream Socket and Datagram Socker (SOCK_STREAM && SOCK_DGRAM).
 Datagram sockets are sometimes called "connectionless sockets"... even though they sometimes can be connect()... programming...
@@ -47,12 +55,3 @@ OSI shares the same layers with the change in Application layer. Presentation an
 
 Encapsulation is done automatically when using function send() for stream socket. For datagram socket sendto() is used to send socket but might require manual additional encapsulation with UDP header.
 
-=======
-To compile:
- g++ -std=c++17 test.cpp ./Socket/ListeningSocket.cpp ./Socket/BindingSocket.cpp ./Socket/SimpleSocket.cpp ./Socket/ConnectingSocket.cpp -o test -ISocket
-
-Current state:
-I simplified the test. Currently i create client and server in 1 file test.cpp on different threads and just see if they connect.
-Next step would be to create a Server class and maybe Client? (not sure yet). 
-For the server class i want to have an array of pointers to Socket classes and member function that creates it.
-I am still not sure if it makes sense to change Listening class to Listening and Accepting? 
