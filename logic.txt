@@ -13,3 +13,38 @@ For client:
     Connect to server
     Send and receive data
     Disconnect
+
+
+
+Reading Beej's Guide to Network Programming.
+There are several types of Internet sockets. In the guide 2 are mentioned: Stream Socket and Datagram Socker (SOCK_STREAM && SOCK_DGRAM).
+Datagram sockets are sometimes called "connectionless sockets"... even though they sometimes can be connect()... programming...
+
+Stream sockets provide reliable, two-way, connected communication streams. For example, if you send two items into a socket like "1" and "2", they will arrive on the other end in the same order: "1" followed by "2".
+
+They are used in applications like Telnet or SSH, which allow remote connections to another computer. These applications require that characters (such as commands or passwords) arrive in the correct order, with no data loss.
+
+Stream sockets achieve this reliable transmission by using the TCP protocol (Transmission Control Protocol). Part of the TCP/IP Network Model.
+
+For Datagram Sockets the situation is a little bit different. When you sent Datagram socket it might arrive.... or not and even IF it arrives it might arrive in the incorrect order.
+How they achieve this great result? UDP protocol (User Datagram Protocol). Follows the same network model as TCP (both use IP for routing). There is no need to confirm if packet arrived.
+The most important is just build the packet and send it. In cases such as gaming, streaming, calls few packet loss doesnt really matter, what matters is speed.
+(there are some additional protocols that can be used on top like tftp and dhcpcd. Used to transfer binary applications. For example require to get confirmation that packet was received "ACK" packet)
+
+Data Encapsulation. Packet is created, wrapped ("encapsulated") in a header by first protocol, then encapsulated again by next protocol etc. till last layer.
+[Ethernet[IP[UDP[TFTP[DATA]]]]]
+When packet is received - hardware strips the Ethernet header, the kernel strips the IP and UDP headers, TFTP program strips the TFTP header and the data are here.
+
+There are 2 main network models TCP (practical) and OSI (Open system interconnect for theoretical).
+The TCP/IP Network model is a set of rules (or layered architecture) that ensures communication between different computers is possible. Its layers are:
+5) Application Layer – Interfaces for user-level communication (e.g., HTTP, SSH, FTP)
+4) Transport Layer – Ensures reliable or fast delivery (e.g., TCP for reliability, UDP for speed)
+3) Network Layer – Handles addressing and routing (e.g., IP, routers, global IP addresses)
+2) Data Link Layer – Deals with local network delivery (e.g., switches, MAC addresses)
+1) Physical Layer – Covers the physical medium (e.g., cables, Wi-Fi, electrical signals)
+*First and second layers is usually combined in 1 Physical.
+
+OSI shares the same layers with the change in Application layer. Presentation and Session are added as 5 and 6 Layers.
+
+Encapsulation is done automatically when using function send() for stream socket. For datagram socket sendto() is used to send socket but might require manual additional encapsulation with UDP header.
+
