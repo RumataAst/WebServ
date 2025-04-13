@@ -1,6 +1,6 @@
 #include <iostream>
-#include <thread>
-#include <chrono>
+#include <thread>           // server and client
+#include <chrono>           // Sleep for client
 #include <unistd.h>
 #include "../net.hpp"
 
