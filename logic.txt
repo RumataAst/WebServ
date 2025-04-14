@@ -55,3 +55,98 @@ OSI shares the same layers with the change in Application layer. Presentation an
 
 Encapsulation is done automatically when using function send() for stream socket. For datagram socket sendto() is used to send socket but might require manual additional encapsulation with UDP header.
 
+IP Addresses, structs and Data Munging
+
+IPv4 looks like 192.0.2.111.
+IPv6 looks like 2001:0db8:c9d2:aee5:73e3:934a:a5ae:9551 (sometimes if it has 0000 it can be shorten to just :).
+
+The address ::1 or 127.0.0.1 is the loopback address (the machine that is running right now).
+There is an IPv4-compatability mode for IPv6 addresses - for example 192.0.2.33 becomes ::ffff:192.0.2.33
+
+Subnets
+For organization reasons we "divide" IP address to 2 parts - network portion and host portion. Example with 192.0.2.12 we could say that first three bytes are the network and last byte is the host.
+The network portion of the IP is described as netmask, which can be bitwise AND with the IP address to get the network number out of it. The netmask is usually 255.255.255.0.
+The new style is to add number of network bits in decimal like 192.0.2.12/30.
+
+Port Numbers
+Beside IP addresses both TCP and UDP protocol use port number. It's a 16-bit number that's like the local address for the connection.
+We need port for the computer to realise to which application connection/packet belonds to. We cant just use IP because 1 device with the same IP can run multiple applications.
+cat /etc/service shows the ports.
+
+Byte order.
+Computer can store bytes with 2 styles. For the byte b34f in Big-Endian (Network Byte Order) it's b3 4f and in Little-Endian (Host Byte Order) 4fb3.
+It's important when we send numbers. When server reads the message it should convert it from Network to Host with ntohl/ntohs (s for short and l for long) in C. When client send it it should convert it with Host to Network htons()
+
+Before numbers go out we send to Network Byte Order  ntohs() or ntohl()
+When they come we conver them to Host Byte Order htons() or htonl()
+*function will check if transformation is needed, if yes perfoms it.
+
+Structs
+Socket interface uses some data types.
+For example socket descriptor is just int.
+struct addrinfo is recent invention and is used to prep the socket address structures for subsequent use. It's also used in host and service name lookups? Name lookup is apparently is web name http: etc.
+
+struct addrinfo {
+    int                 ai_flags;       // AI_PASSIVE, AI_CANONNAME, etc.
+    int                 ai_family;      // AF_INET for IP4, AF_INET6, AF_UNSPEC
+    int                 ai_socktype;    //SOCK_STREAM, SOCK_DGRAM
+    int                 ai_protocol;    // 0 for "any"
+    size_t              ai_addrlen;     //size of ai_addr in bytes
+    struct  sockaddr    *ai_addr;       //struct sockaddr_in or _in6
+    char                *ai_cannonname; //full canonical hostname
+}
+getaddrinfo() - can fill the struct.
+Given node and service, which identify an Internet host and a  service,
+       getaddrinfo()  returns  one  or more addrinfo structures, each of which
+       contains an Internet address that can be specified in a call to bind(2)
+       or connect(2).  The getaddrinfo() function combines  the  functionality
+       provided  by the gethostbyname(3) and getservbyname(3) functions into a
+       single interface, but unlike the  latter  functions,  getaddrinfo()  is
+       reentrant  and  allows programs to eliminate IPv4-versus-IPv6 dependen‐
+       cies.
+struct sockaddr holds address information for many type of sockets
+struct sockaddr {
+    unsigned short  sa_family;      //address family, AF_xxx
+    char            sa_data[14];    // 14 bytes of protocol address
+}
+
+struct sockaddr_in (in for Internet) is struct created to be used with IPv4. Both sockaddr_in and sockaddr have pointers to each other.
+For IPv4
+struct sockaddr_in {
+    short int           sin_family;     // Address family, AF_INET
+    unsigned short int  sin_port;   // Port number
+    struct in_addr      sin_addr;   //Internet address
+    unsigned char       sin_zero;   // Same size as struct sockaddr
+    
+}
+
+!!! sin_zero should be set to all zero with function memset(). 
+sin_family corresponds to sa_family and should be set to AF_INTET. 
+sin_port must be in Network Byte Order (using htons())
+
+// Internet address
+struct in_addr {
+    uint32_t    s_addr;
+}
+
+IPv6 only--see struct sockaddr_in and struct in_addr for IPv4
+struct sockaddr_in6 {
+    u_int16_t sin6_family;      // address family, AF_INET6
+    u_int16_t sin6_port;        // port number, Network Byte Order
+    u_int32_t sin6_flowinfo;    // IPv6 flow information
+    struct in6_addr sin6_addr;  // IPv6 address
+    u_int32_t sin6_scope_id;    // Scope ID
+};
+struct in6_addr {
+    unsigned char s6_addr[16]; // IPv6 address
+};
+
+struct sockaddr_storage {
+    sa_family_t ss_family;          // address family
+    char __ss_pad1[padding for first struct];
+    int64_t __ss_align;
+    char __ss_pad2[padding for second struct];
+};
+
+IP Addresses
+
