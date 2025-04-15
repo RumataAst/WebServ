@@ -23,7 +23,7 @@ I simplified the test. Currently i create client and server in 1 file test.cpp o
 The question is what is the better structure of the socket. Should Listening and Accepting be handled with the same class or if there is a reason to have Listening as separate.
 What are non-blocking file descriptors. What are poll(), select(), kqueue() or epoll()?
 
-Reading Beej's Guide to Network Programming.
+Reading Beej's Guide to Network Programming.https://beej.us/guide/bgnet/pdf/bgnet_usl_c_1.pdf
 There are several types of Internet sockets. In the guide 2 are mentioned: Stream Socket and Datagram Socker (SOCK_STREAM && SOCK_DGRAM).
 Datagram sockets are sometimes called "connectionless sockets"... even though they sometimes can be connect()... programming...
 
@@ -149,4 +149,37 @@ struct sockaddr_storage {
 };
 
 IP Addresses
+There are function that convert IP address omtp struct. For example:
+In order to convert IP address 10.12.110.57 into struct in_addr (works the same for IPv6 and struct in6_addr) we can use inet_pton()
+intet_pton(AF_INET for IPv4 and AF_INET6 for IPv6, 10.12.110.57 (or IPv6 address), &(sa.som_addr) / &(sa6.sin6_addr) accrodingly));
+The function returns 0 or -1 as error. It's important to check for that before using the struct.
+
+Conversion from struct to IP also exists via inet_ntop()  - network to presentation
+
+// IPv4:
+ char ip4[INET_ADDRSTRLEN]; // space to hold the IPv4 string
+ struct sockaddr_in sa; // pretend this is loaded with something
+
+ inet_ntop(AF_INET, &(sa.sin_addr), ip4, INET_ADDRSTRLEN);
+
+ printf("The IPv4 address is: %s\n", ip4);
+
+
+ // IPv6:
+
+ char ip6[INET6_ADDRSTRLEN]; // space to hold the IPv6 string
+ struct sockaddr_in6 sa6; // pretend this is loaded with something
+
+ inet_ntop(AF_INET6, &(sa6.sin6_addr), ip6, INET6_ADDRSTRLEN);
+
+ printf("The address is: %s\n", ip6);
+
+ It works only with numeric IP addresses for www.example.com getaddrinfo().
+
+ Private (or Disconnected) Networks
+ Firewall hides the network from the rest of the world for the protection. Additionally, sometimes firewall translates "internal" IP address to "external" using process called Network Address Translation (NAT)
+
+System Calls
+
+
 
