@@ -181,5 +181,50 @@ Conversion from struct to IP also exists via inet_ntop()  - network to presentat
 
 System Calls
 
+getaddrinfo() is function to fill the structs. It works with bouth IPv4 and IPv6.
+
+int gettadrinfo(const char *node, const char *service, const struct addrinfo *hints, struct addrinfo **res).
+It takes 3 parameters and give a pointer to linked list res (result)
+
+Node is the host name to connect to, or an IP address.
+Service is a port number like "80", or the name of a particular service (The IANA Port List or /etc/services) like http, ftp, telhen or smtp.
+
+Hints points to a struct addrinfo that was already filled. It's like a guidance or a filter. What kind of result do i want.
+
+
+socket() - get the File Descriptor
+int socket(int domain, int type, int protocol);
+
+The argumets allow to specify what kind of socket do i want.
+Domain is PF_INET or PF_INET6
+type is SOCK_STREAM or SOCK_DGRAM
+protocol is 0 or for the type. - getprotobyname() can help to look up the protocol.
+
+The way how to use it: 
+
+int s;
+struct addrinfo hints, *res;
+
+// do the lookup
+// [pretend we already filled out the "hints" struct]
+getaddrinfo("www.example.com", "http", &hints, &res);
+
+// again, you should do error-checking on getaddrinfo(), and walk
+// the "res" linked list looking for valid entries instead of just
+// assuming the first one is good (like many of these examples do).
+// See the section on client/server for real examples.
+
+s = socket(res->ai_family, res->ai_socktype, res->ai_protocol);
+socket return -1 on error.
+
+Socket by itself is just file descriptor. We need to give it purpose.
+
+bind()
+Once the socket is created we can associate that socket with a port on your local machine. This is done when the next step is to listen for incoming connections. 
+If we just want to connect then it doesnt matter.
+
+#include <sys/types.h>
+#include <sys/socket.h>
+int bind(int sockfd, struct sockaddr *my_addr, int addrlen);
 
 
