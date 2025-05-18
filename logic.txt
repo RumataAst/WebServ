@@ -16,7 +16,9 @@ For client:
 
 
 To compile:
- g++ -std=c++17 test.cpp ./Socket/ListeningSocket.cpp ./Socket/BindingSocket.cpp ./Socket/SimpleSocket.cpp ./Socket/ConnectingSocket.cpp -o test -ISocket
+ g++ -std=c++17 Socket/test.cpp ./Socket/ListeningSocket.cpp ./Socket/BindingSocket.cpp ./Socket/SimpleSocket.cpp ./Socket/ConnectingSocket.cpp -o test -ISocket
+
+Client connects via telnet to local host and same port: telnet 127.0.0.1 12345
 
 Current state:
 I simplified the test. Currently i create client and server in 1 file test.cpp on different threads and just see if they connect.
