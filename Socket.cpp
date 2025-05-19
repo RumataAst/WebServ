@@ -103,3 +103,29 @@ Socket::~Socket() {
     if (sock_fd >= 0)
         close(sock_fd);
 }
+
+
+// to check 
+std::string Server::receiveMessage(int socket_fd) {
+    char buffer[1024];
+    int n = recv(socket_fd, buffer, sizeof(buffer) - 1, 0);  // Leave space for '\0'
+
+    if (n <= 0) {
+        return "";
+    }
+
+    buffer[n] = '\0';
+    std::string received(buffer);
+    // trim whitespace from the end
+    received.erase(std::remove_if(received.begin(), received.end(), ::isspace), received.end());
+    return received;
+}
+
+bool Server::sendMessage(int socket_fd, const std::string &message) {
+    int bytes_sent = send(socket_fd, message.c_str(), message.size(), 0);
+    if (bytes_sent == -1) {
+        std::cerr << "Error sending message to client: " << strerror(errno) << std::endl;
+        return false;
+    }
+    return true;
+}
