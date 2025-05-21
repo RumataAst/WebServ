@@ -110,6 +110,7 @@ std::string Server::receiveMessage(int socket_fd) {
     char buffer[1024];
     int n = recv(socket_fd, buffer, sizeof(buffer) - 1, 0);  // Leave space for '\0'
 
+    // I need properly differentiate between n = 0 when client closed connection and error
     if (n <= 0) {
         return "";
     }
@@ -127,5 +128,6 @@ bool Server::sendMessage(int socket_fd, const std::string &message) {
         std::cerr << "Error sending message to client: " << strerror(errno) << std::endl;
         return false;
     }
+    // additional check is needed if not the full message was sent - meaning bytes_sent != message.size() then i need to continue from the difference and send remaining message
     return true;
 }
