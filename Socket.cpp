@@ -128,6 +128,9 @@ bool Server::sendMessage(int socket_fd, const std::string &message) {
         std::cerr << "Error sending message to client: " << strerror(errno) << std::endl;
         return false;
     }
-    // additional check is needed if not the full message was sent - meaning bytes_sent != message.size() then i need to continue from the difference and send remaining message
+    // the following check is needed if not the full message was sent - meaning bytes_sent != message.size() then i need to continue from the difference and send remaining message
+    // additionally i should also check probably before sending a message if this particular socket is ready to accept....
+    //  The questions is what do i do if it's not ready? Coz my program will probably stopped all together if i just wait in the loop for that 
+    // i need to look more into poll() and more specifically POLLOUT	Alert me when I can send() data to this socket without blocking.
     return true;
 }
